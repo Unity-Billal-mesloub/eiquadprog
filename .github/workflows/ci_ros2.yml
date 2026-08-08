@@ -1,43 +1,29 @@
-name: CI - Linux - ROS
+name: ROS2 Continuous Integration
 on:
   push:
     branches:
-      - devel
-      - master
       - main
   pull_request:
-    branches:
-      - devel
-      - master
-      - main
 jobs:
-  ROS:
+  build:
     strategy:
       matrix:
         env:
-          - {ROS_DISTRO: rolling}
-          - {ROS_DISTRO: kilted}
-          - {ROS_DISTRO: jazzy}
           - {ROS_DISTRO: humble}
-    env:
-      CCACHE_DIR: /github/home/.ccache
+          - {ROS_DISTRO: jazzy}
+          - {ROS_DISTRO: kilted}
+          - {ROS_DISTRO: rolling}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: recursive
-      - uses: actions/cache@v6
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ccache-${{ matrix.env.ROS_DISTRO }}
       - uses: 'ros-industrial/industrial_ci@125164b9f1883cdf1858897a7146d1bebf2be5c6'
         env: ${{ matrix.env }}
   check:
     if: always()
-    name: check-linux-ros
+    name: check-ros-ci
     runs-on: ubuntu-latest
     needs:
-      - ROS
+      - build
     steps:
       - uses: re-actors/alls-green@release/v1
         with:

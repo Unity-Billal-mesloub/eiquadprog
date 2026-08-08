@@ -1,5 +1,6 @@
 #include "eiquadprog/eiquadprog-fast.hpp"
 
+#include <cassert>
 #include <iostream>
 
 namespace eiquadprog {
